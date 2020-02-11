@@ -42,7 +42,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (! $token = JWTAuth::attempt($credentials,$request->remember)) {
                 return response()->json(['error' => 'invalid_credentials'], 400);
             }
         } catch (JWTException $e) {
@@ -69,7 +69,7 @@ class AuthController extends Controller
     {
         try {
 
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
+            if (! $data = JWTAuth::parseToken()->authenticate()) {
                     return response()->json(['user_not_found'], 404);
             }
 
@@ -87,7 +87,7 @@ class AuthController extends Controller
 
             }
 
-            return response()->json(compact('user'));
+            return response()->json(compact('data'));
     }
     /**
      * Refresh JWT token
